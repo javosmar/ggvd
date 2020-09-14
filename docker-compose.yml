@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+    mongo1:
+        image: mongo
+        hostname: mongo1
+        container_name: container_mongo1
+        restart: always
+        expose:
+            - 27017
+        networks:
+            - mongo-intra-net
+        entrypoint: ["/usr/bin/mongod","--bind_ip_all","--replSet","rs"]
+        volumes:
+            - db1:/data/db
+
+    mongo2:
+        image: mongo
+        hostname: mongo2
+        container_name: container_mongo2
+        restart: always
+        expose:
+            - 27017
+        networks:
+            - mongo-intra-net
+        entrypoint: ["/usr/bin/mongod","--bind_ip_all","--replSet","rs"]
+        volumes:
+            - db2:/data/db
+
+    mongo3:
+        image: mongo
+        hostname: mongo3
+        container_name: container_mongo3
+        restart: always
+        expose:
+            - 27017
+        networks:
+            - mongo-intra-net
+        entrypoint: ["/usr/bin/mongod","--bind_ip_all","--replSet","rs"]
+        volumes:
+            - db3:/data/db
+        
+networks:
+    mongo-intra-net:
+        driver: bridge
+
+volumes:
+    db1:
+    db2:
+    db3:
