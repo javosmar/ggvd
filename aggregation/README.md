@@ -9,29 +9,45 @@ db.facturas.aggregate([
         $unwind : "$item"
     },
     {
-    $project:{
-            _id:0,     
-            region: "$cliente.region",
-            cantidad: "$item.cantidad"
-         }
-    },
-    {
-     $group:{
-        _id:"$region",
-        totalProd: {$sum:"$cantidad"},
+        $group:{
+            _id:"$cliente.region",
+            totalProd: {
+                $sum:"$item.cantidad"
+            },
         }
     }
 ])
 ```
 ```sh
-{ "_id" : "CENTRO", "totalProd" : 110160 }
 { "_id" : "NOA", "totalProd" : 8760 }
-{ "_id" : "CABA", "totalProd" : 175200 }
+{ "_id" : "CENTRO", "totalProd" : 110160 }
 { "_id" : "NEA", "totalProd" : 262800 }
+{ "_id" : "CABA", "totalProd" : 175200 }
 ```
 ### Basado en la consulta del punto 1, mostrar sólo la región que tenga el menor ingreso.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+     $group:{
+        _id:"$cliente.region",
+        totalProd: {$sum:"$item.cantidad"},
+        }
+    },
+    {
+        $sort: {
+            totalProd: 1
+        }
+    },
+    {
+        $limit: 1
+    }
+])
+```
+```sh
+{ "_id" : "NOA", "totalProd" : 8760 }
 ```
 ### Basado en la consulta del punto 1, mostrar sólo las regiones que tengan una cantidad de productos vendidos superior a 10000.
 ```sh
