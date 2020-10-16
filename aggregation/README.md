@@ -11,18 +11,16 @@ db.facturas.aggregate([
     {
         $group:{
             _id:"$cliente.region",
-            totalProd: {
-                $sum:"$item.cantidad"
-            },
+            totalProd: {$sum:"$item.cantidad"},
         }
     }
 ])
 ```
 ```sh
-{ "_id" : "NOA", "totalProd" : 8760 }
-{ "_id" : "CENTRO", "totalProd" : 110160 }
-{ "_id" : "NEA", "totalProd" : 262800 }
-{ "_id" : "CABA", "totalProd" : 175200 }
+{ "_id" : "NEA", "totalProd" : 210560 }
+{ "_id" : "CABA", "totalProd" : 141120 }
+{ "_id" : "NOA", "totalProd" : 7056 }
+{ "_id" : "CENTRO", "totalProd" : 88704 }
 ```
 ### Basado en la consulta del punto 1, mostrar sólo la región que tenga el menor ingreso.
 ```sh
@@ -31,15 +29,13 @@ db.facturas.aggregate([
         $unwind : "$item"
     },
     {
-     $group:{
-        _id:"$cliente.region",
-        totalProd: {$sum:"$item.cantidad"},
+        $group:{
+            _id:"$cliente.region",
+            totalProd: {$sum:"$item.cantidad"},
         }
     },
     {
-        $sort: {
-            totalProd: 1
-        }
+        $sort: {totalProd: 1}
     },
     {
         $limit: 1
@@ -47,25 +43,106 @@ db.facturas.aggregate([
 ])
 ```
 ```sh
-{ "_id" : "NOA", "totalProd" : 8760 }
+{ "_id" : "NOA", "totalProd" : 7056 }
 ```
 ### Basado en la consulta del punto 1, mostrar sólo las regiones que tengan una cantidad de productos vendidos superior a 10000.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $group:{
+            _id:"$cliente.region",
+            totalProd: {$sum:"$item.cantidad"},
+        }
+    },
+    {
+        $match: {
+            totalProd: {$gt: 10000}
+        }
+    }
+])
+```
+```sh
+{ "_id" : "NEA", "totalProd" : 210560 }
+{ "_id" : "CABA", "totalProd" : 141120 }
+{ "_id" : "CENTRO", "totalProd" : 88704 }
 ```
 ### Se requiere obtener un reporte que contenga la siguiente información, nro. cuit, apellido y nombre y región y cantidad de facturas, ordenado por apellido.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $group: {
+            _id: "$cliente",
+            nFacturas: {$sum: 1}
+        }
+    },
+    {
+        $sort: {
+            "_id.apellido": 1
+        }
+    }
+])
 ```
-### Basados en la consulta del punto 4 informar sólo los clientes con número de CUIT mayor a 27000000000.
 ```sh
-
+{ "_id" : { "apellido" : "Lavagno", "cuit" : 2729887543, "nombre" : "Soledad", "region" : "NOA" }, "nFacturas" : 7056 }
+{ "_id" : { "apellido" : "Malinez", "cuit" : 2740488484, "nombre" : "Marina", "region" : "CENTRO" }, "nFacturas" : 7392 }
+{ "_id" : { "apellido" : "Manoni", "cuit" : 2029889382, "nombre" : "Juan Manuel", "region" : "NEA" }, "nFacturas" : 21056 }
+{ "_id" : { "apellido" : "Zavasi", "cuit" : 2038373771, "nombre" : "Martin", "region" : "CABA" }, "nFacturas" : 14112 }
+```
+### Basados en la consulta del punto 4 informar sólo los clientes con número de CUIT mayor a 2700000000.
+```sh
+db.facturas.aggregate([
+    {
+        $group: {
+            _id: "$cliente",
+            nFacturas: {$sum: 1}
+        }
+    },
+    {
+        $match: {
+            "_id.cuit": {$gt:  2700000000}
+        }
+    },
+    {
+        $sort: {"_id.apellido": 1}
+    }
+])
+```
+```sh
+{ "_id" : { "apellido" : "Lavagno", "cuit" : 2729887543, "nombre" : "Soledad", "region" : "NOA" }, "nFacturas" : 7056 }
+{ "_id" : { "apellido" : "Malinez", "cuit" : 2740488484, "nombre" : "Marina", "region" : "CENTRO" }, "nFacturas" : 7392 }
 ```
 ### Basados en la consulta del punto 5 informar solamente la cantidad de clientes que cumplen con esta condición.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $group: {
+            _id: "$cliente",
+            nFacturas: {$sum: 1}
+        }
+    },
+    {
+        $match: {
+            "_id.cuit": {$gt:  2700000000}
+        }
+    },
+    {
+        $group: {
+            _id:null,
+            nCuitMayor: {$sum:1}
+        }
+    }
+])
+```
+```sh
+{ "_id" : null, "nCuitMayor" : 2 }
 ```
 ### Se requiere realizar una consulta que devuelva la siguiente información: producto y cantidad de facturas en las que lo compraron, ordenado por cantidad de facturas descendente.
+```sh
+
+```
 ```sh
 
 ```
@@ -73,7 +150,13 @@ db.facturas.aggregate([
 ```sh
 
 ```
+```sh
+
+```
 ### Idem el punto anterior, ordenar por ingresos en forma ascendente, saltear el 1ro y mostrar 2do y 3ro.
+```sh
+
+```
 ```sh
 
 ```
@@ -81,11 +164,20 @@ db.facturas.aggregate([
 ```sh
 
 ```
+```sh
+
+```
 ### Obtener los productos ordenados en forma descendente por la cantidad de diferentes personas que los compraron.
 ```sh
 
 ```
+```sh
+
+```
 ### Obtener el total gastado por persona y mostrar solo los que gastaron más de 3100000. Los documentos devueltos deben tener el nombre completo del cliente y el total gastado: {cliente:”<nombreCompleto>”,total:<num>}
+```sh
+
+```
 ```sh
 
 ```
