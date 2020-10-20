@@ -234,46 +234,354 @@ db.facturas.aggregate([
 ```
 ### Obtener todos productos junto con un array de las personas que lo compraron. En este array deberá haber solo strings con el nombre completo de la persona. Los documentos entregados como resultado deberán tener la siguiente forma: {producto: “<nombre>”, personas:[“...”, ...]}
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $project: {
+            "producto": "$item.producto",
+            "persona": {$concat: ["$cliente.apellido"," ", "$cliente.nombre"]}
+        }
+    },
+    {
+        $group:{
+            _id:"$producto",
+            personas: {$addToSet: "$persona"}
+        }
+    },
+    {
+        $addFields: {
+            producto: "$_id"
+        }
+    },
+    {
+        $project: {
+            _id: 0
+        }
+    }
+])
 ```
 ```sh
-
+{ "personas" : [ "Lavagno Soledad", "Manoni Juan Manuel" ], "producto" : "SET HERRAMIENTAS" }
+{ "personas" : [ "Manoni Juan Manuel" ], "producto" : "TUERCA 5mm" }
+{ "personas" : [ "Manoni Juan Manuel", "Zavasi Martin" ], "producto" : "TUERCA 2mm" }
+{ "personas" : [ "Zavasi Martin" ], "producto" : "CORREA 10mm" }
+{ "personas" : [ "Manoni Juan Manuel", "Malinez Marina" ], "producto" : "TALADRO 12mm" }
+{ "personas" : [ "Malinez Marina" ], "producto" : " CORREA 12mm" }
 ```
 ### Obtener los productos ordenados en forma descendente por la cantidad de diferentes personas que los compraron.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $project: {
+            "producto": "$item.producto",
+            "persona": {$concat: ["$cliente.apellido"," ", "$cliente.nombre"]},
+        }
+    },
+    {
+        $group:{
+            _id:"$producto",
+            personas: {$addToSet: "$persona"}
+        }
+    },
+    {
+        $addFields: {
+            count: {$size: "$personas"}
+        }
+    },
+    {
+        $sort: {"count": -1}
+    }
+])
 ```
 ```sh
-
+{ "_id" : "SET HERRAMIENTAS", "personas" : [ "Lavagno Soledad", "Manoni Juan Manuel" ], "count" : 2 }
+{ "_id" : "TUERCA 2mm", "personas" : [ "Manoni Juan Manuel", "Zavasi Martin" ], "count" : 2 }
+{ "_id" : "TALADRO 12mm", "personas" : [ "Manoni Juan Manuel", "Malinez Marina" ], "count" : 2 }
+{ "_id" : "TUERCA 5mm", "personas" : [ "Manoni Juan Manuel" ], "count" : 1 }
+{ "_id" : "CORREA 10mm", "personas" : [ "Zavasi Martin" ], "count" : 1 }
+{ "_id" : " CORREA 12mm", "personas" : [ "Malinez Marina" ], "count" : 1 }
 ```
-### Obtener el total gastado por persona y mostrar solo los que gastaron más de 3100000. Los documentos devueltos deben tener el nombre completo del cliente y el total gastado: {cliente:”<nombreCompleto>”,total:<num>}
+### Obtener el total gastado por persona y mostrar solo los que gastaron más de 28000000. Los documentos devueltos deben tener el nombre completo del cliente y el total gastado: {cliente:”<nombreCompleto>”,total:<num>}
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $project: {
+            "persona": {$concat: ["$cliente.apellido"," ", "$cliente.nombre"]},
+            "gastado": {$multiply: ["$item.cantidad","$item.precio"]}
+        }
+    },
+    {
+        $group:{
+            _id:"$persona",
+            totalGastado: {$sum: "$gastado"}
+        }
+    },
+    {
+        $addFields: {
+            cliente: "$_id",
+            total: "$totalGastado"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            totalGastado: 0
+        }
+    },
+    {
+        $match: {
+            total: {$gt: 28000000}
+        }
+    },
+])
 ```
 ```sh
-
+{ "cliente" : "Manoni Juan Manuel", "total" : 28476000 }
 ```
 ### Obtener el promedio de gasto por factura por cada región.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind: "$item"
+    },
+    {
+        $project: {
+            "region": "$cliente.region",
+            "gastado": {$multiply: ["$item.precio","$item.cantidad"]}
+        }
+    },
+    {
+        $group: {
+            _id: "$region",
+            promedio: {$avg: "$gastado"}
+        }
+    }
+])
+```
+```sh
+{ "_id" : "NEA", "promedio" : 674.4031830238727 }
+{ "_id" : "CABA", "promedio" : 745.3333333333334 }
+{ "_id" : "NOA", "promedio" : 700 }
+{ "_id" : "CENTRO", "promedio" : 344 }
 ```
 ### Obtener la factura en la que se haya gastado más. En caso de que sean varias obtener la que tenga el número de factura menor.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind: "$item"
+    },
+    {
+        $project: {
+            "nroFactura": "$nroFactura",
+            "gasto": {$multiply: ["$item.precio","$item.cantidad"]}
+        }
+    },
+    {
+        $group: {
+            _id: "$nroFactura",
+            gastado: {$sum: "$gasto"}
+        }
+    },
+    {
+        $sort: {"gastado": -1, "_id": 1}
+    },
+    {
+        $limit: 1
+    }
+])
+```
+```sh
+{ "_id" : 1002, "gastado" : 220416 }
 ```
 ### Obtener a los clientes indicando cuánto fue lo que más gastó en una única factura.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind: "$item"
+    },
+    {
+        $project: {
+            cliente: {
+                $concat: ["$cliente.nombre", " ", "$cliente.apellido"]
+            },
+            nroFactura: "$nroFactura",
+            gastado: {
+                $multiply: ["$item.precio", "$item.cantidad"]
+            }
+        }
+    },
+    {
+        $group: {
+            _id: {
+                cliente: "$cliente",
+                nroFactura: "$nroFactura"
+            },
+            totalGastado: {
+                $sum: "$gastado"
+            }
+        }
+    },
+    {
+        $group: {
+            _id: "$_id.cliente",
+            maxGastado: {
+                $max: "$totalGastado"
+            }
+        }
+    }
+])
+```
+```sh
+{ "_id" : "Soledad Lavagno", "maxGastado" : 78400 }
+{ "_id" : "Juan Manuel Manoni", "maxGastado" : 219520 }
+{ "_id" : "Marina Malinez", "maxGastado" : 77056 }
+{ "_id" : "Martin Zavasi", "maxGastado" : 220416 }
 ```
 ### Utilizando MapReduce, indicar la cantidad total comprada de cada ítem. Comparar el resultado con el ejercicio 8.
 ```sh
+map = function() {
+    this.item.forEach(
+        function(item){
+            emit(item.producto, item.cantidad);
+        }
+    )
+}
 
+reduce = function(key, values) {
+    var total = 0;
+    for(i=0; i<values.length; i++){
+        total += values[i];
+    }
+    return total;
+}
+
+db.facturas.mapReduce(map, reduce, {out:{inline: 1}})
 ```
+```sh
+{
+        "results" : [
+                {
+                        "_id" : " CORREA 12mm",
+                        "value" : 81312
+                },
+                {
+                        "_id" : "CORREA 10mm",
+                        "value" : 98784
+                },
+                {
+                        "_id" : "SET HERRAMIENTAS",
+                        "value" : 14112
+                },
+                {
+                        "_id" : "TALADRO 12mm",
+                        "value" : 21504
+                },
+                {
+                        "_id" : "TUERCA 2mm",
+                        "value" : 56448
+                },
+                {
+                        "_id" : "TUERCA 5mm",
+                        "value" : 175280
+                }
+        ],
+        "timeMillis" : 663,
+        "counts" : {
+                "input" : 49616,
+                "emit" : 85232,
+                "reduce" : 2982,
+                "output" : 6
+        },
+        "ok" : 1
+}
+```
+Se aprecia que los resutados obtenidos mediante *mapReduce* y *aggregation framework* coinciden.
 ### Obtener la información de los clientes que hayan gastado 100000 en una orden junto con el número de orden.
 ```sh
-
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $project: {
+            cliente: {
+                $concat: ["$cliente.apellido"," ", "$cliente.nombre"]
+            },
+            nroFactura: "$nroFactura",
+            gastado: {
+                $multiply: ["$item.cantidad","$item.precio"]
+            }
+        }
+    },
+    {
+        $group:{
+            _id: {
+                cliente: "$cliente",
+                nroFactura: "$nroFactura"
+            },
+            totalGastado: {
+                $sum: "$gastado"
+            }
+        }
+    },
+    {
+        $match: {
+            totalGastado: {$eq:  100000}
+        }
+    },
+    {
+        $project: {
+            cliente: "$cliente",
+            nroFactura: "$nroFactura"
+        }
+    }
+])
 ```
-### En base a la localidad de los clientes, obtener el total facturado por localidad.
 ```sh
 
+```
+No se encontraron clientes que hallan gastado la cantidad mencionada en una factura.
+### En base a la localidad de los clientes, obtener el total facturado por localidad.
+```sh
+db.facturas.aggregate([
+    {
+        $unwind : "$item"
+    },
+    {
+        $project: {
+            localidad: "$cliente.region",
+            gastado: {
+                $multiply: ["$item.cantidad","$item.precio"]
+            }
+        }
+    },
+    {
+        $group:{
+            _id: "$localidad",
+            totalGastado: {
+                $sum: "$gastado"
+            }
+        }
+    },
+    {
+        $project: {
+            localidad: "$localidad",
+            facturado: "$totalGastado"
+        }
+    }
+])
+```
+```sh
+{ "_id" : "NEA", "facturado" : 28476000 }
+{ "_id" : "CABA", "facturado" : 15777216 }
+{ "_id" : "NOA", "facturado" : 4939200 }
+{ "_id" : "CENTRO", "facturado" : 5085696 }
 ```
