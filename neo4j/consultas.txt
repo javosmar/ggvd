@@ -1,0 +1,167 @@
+CREATE 
+    (P1: Persona { apellido: "Corrado", nombre: "Gustavo" } ),
+    (P2: Persona { apellido: "Díaz", nombre: "Analía" } ),
+    (P3: Persona { apellido: "Dominguez", nombre: "Mariana" } ),
+    (P4: Persona { apellido: "Pereyra", nombre: "Claudio" } ),
+    (P5: Persona { apellido: "López", nombre: "Mario" } ),
+    (P6: Persona { apellido: "Ferreira", nombre: "Natalia" } ),
+    (P7: Persona { apellido: "García", nombre: "Eduardo" } ),
+    (P8: Persona { apellido: "González", nombre: "Bibiana" } ),
+    (P9: Persona { apellido: "Lupis", nombre: "Jorge" } ),
+    (P10: Persona { apellido: "Hernandez", nombre: "Cecilia" } ),
+    (P11: Persona { apellido: "Ciuccio", nombre: "Javier" } ),
+    (P12: Persona { apellido: "Filguera", nombre: "Hernan" } ),
+    (P13: Persona { apellido: "Menem", nombre: "Miguel" } ),
+    (P14: Persona { apellido: "Nazaro", nombre: "Nicolás" } ),
+    (P15: Persona { apellido: "Carlin", nombre: "Gerardo" } );
+
+CREATE 
+    (GDP: Materia { id: "2", nombre: "GDP", modalidad: "Obligatoria", bimestre: 1 } ),
+    (PDI: Materia { id: "2", nombre: "PDI", modalidad: "Obligatoria", bimestre: 1 } ),
+    (DDA1: Materia { id: "3", nombre: "DDA1", modalidad: "Obligatoria", bimestre: 1 } ),
+    (ADD: Materia { id: "4", nombre: "ADD", modalidad: "Obligatoria", bimestre: 2 } ),
+    (DDA2: Materia { id: "5", nombre: "DDA2", modalidad: "Obligatoria", bimestre: 2 } ),
+    (ADP: Materia { id: "6", nombre: "ADP", modalidad: "Obligatoria", bimestre: 2 } ),
+    (CIBS: Materia { id: "7", nombre: "CIBS", modalidad: "Obligatoria", bimestre: 3 } ),
+    (GVD: Materia { id: "8", nombre: "GVD", modalidad: "Obligatoria", bimestre: 3 } ),
+    (DDA3: Materia { id: "9", nombre: "DDA3", modalidad: "Obligatoria", bimestre: 3 } ),
+    (APA: Materia { id: "10", nombre: "APA", modalidad: "Obligatoria", bimestre: 4 } ),
+    (TSIOT: Materia { id: "11", nombre: "TSIOT", modalidad: "Optativa", bimestre: 4 } ),
+    (IIS: Materia { id: "12", nombre: "IIS", modalidad: "Optativa", bimestre: 4 } ),
+    (Elec3: Materia { id: "13", nombre: "Elec3", modalidad: "Optativa", bimestre: 5 } ),
+    (Elec4: Materia { id: "14", nombre: "Elec4", modalidad: "Optativa", bimestre: 5 } ),
+    (TI: Materia { id: "15", nombre: "TI", modalidad: "Obligatoria", bimestre: 5 } );
+
+// Conoce
+MATCH (Corrado: Persona { apellido: "Corrado"}), (Mendez: Persona { apellido: "Mendez"} ) CREATE (Corrado)-[:CONOCE_A {  } ]->(Mendez);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (Mendez: Persona { apellido: "Mendez"} ) CREATE (Díaz)-[:CONOCE_A {  } ]->(Mendez);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (López: Persona { apellido: "López"} ) CREATE (Pereyra)-[:CONOCE_A {  } ]->(López);
+MATCH (González: Persona { apellido: "González"}), (Mendez: Persona { apellido: "Mendez"} ) CREATE (González)-[:CONOCE_A {  } ]->(Mendez);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (Corrado: Persona { apellido: "Corrado"} ) CREATE (Díaz)-[:CONOCE_A {  } ]->(Corrado);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (García: Persona { apellido: "García"} ) CREATE (Dominguez)-[:CONOCE_A {  } ]->(García);
+MATCH (Lupis: Persona { apellido: "Lupis"}), (Díaz: Persona { apellido: "Díaz"} ) CREATE (Lupis)-[:CONOCE_A {  } ]->(Díaz);
+MATCH (González: Persona { apellido: "González"}), (Ferreira: Persona { apellido: "Ferreira"} ) CREATE (González)-[:CONOCE_A {  } ]->(Ferreira);
+MATCH (Corrado: Persona { apellido: "Corrado"}), (Lupis: Persona { apellido: "Lupis"} ) CREATE (Corrado)-[:CONOCE_A {  } ]->(Lupis);
+MATCH (Lupis: Persona { apellido: "Lupis"}), (Dominguez: Persona { apellido: "Dominguez"} ) CREATE (Lupis)-[:CONOCE_A {  } ]->(Dominguez);
+
+// GDP
+MATCH (Lupis: Persona { apellido: "Lupis"}), (GDP: Materia { id: "1"} ) CREATE (Lupis)-[:ENSEÑO]->(GDP);
+MATCH (Corrado: Persona { apellido: "Corrado"}), (GDP: Materia { id: "1"} ) CREATE (Corrado)-[:CURSO {anio: "2019", nota: "9" } ]->(GDP);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (GDP: Materia { id: "1"} ) CREATE (Díaz)-[:CURSO {anio: "2019", nota: "8" } ]->(GDP);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (GDP: Materia { id: "1"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", nota: "7" } ]->(GDP);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (GDP: Materia { id: "1"} ) CREATE (Pereyra)-[:CURSO {anio: "2019", nota: "10" } ]->(GDP);
+MATCH (López: Persona { apellido: "López"}), (GDP: Materia { id: "1"} ) CREATE (López)-[:CURSO {anio: "2020", nota: "7" } ]->(GDP);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (GDP: Materia { id: "1"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", nota: "8" } ]->(GDP);
+
+// PDI
+MATCH (Lupis: Persona { apellido: "Lupis"}), (PDI: Materia { id: "2"} ) CREATE (Lupis)-[:ENSEÑO]->(PDI);
+MATCH (Corrado: Persona { apellido: "Corrado"}), (PDI: Materia { id: "2"} ) CREATE (Corrado)-[:CURSO {anio: "2019", nota: "8" } ]->(PDI);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (PDI: Materia { id: "2"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", nota: "9" } ]->(PDI);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (PDI: Materia { id: "2"} ) CREATE (Pereyra)-[:CURSO {anio: "2019", nota: "8" } ]->(PDI);
+MATCH (López: Persona { apellido: "López"}), (PDI: Materia { id: "2"} ) CREATE (López)-[:CURSO {anio: "2020", nota: "8" } ]->(PDI);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (PDI: Materia { id: "2"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", nota: "10" } ]->(PDI);
+MATCH (García: Persona { apellido: "García"}), (PDI: Materia { id: "2"} ) CREATE (García)-[:CURSO {anio: "2020", nota: "8" } ]->(PDI);
+
+// DDA1
+MATCH (Mendez: Persona { apellido: "Mendez"}), (DDA1: Materia { id: "3"} ) CREATE (Mendez)-[:ENSEÑO]->(DDA1);
+MATCH (Corrado: Persona { apellido: "Corrado"}), (DDA1: Materia { id: "3"} ) CREATE (Corrado)-[:CURSO {anio: "2019", nota: "10" } ]->(DDA1);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (DDA1: Materia { id: "3"} ) CREATE (Díaz)-[:CURSO {anio: "2019", nota: "10" } ]->(DDA1);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (DDA1: Materia { id: "3"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", nota: "9" } ]->(DDA1);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (DDA1: Materia { id: "3"} ) CREATE (Pereyra)-[:CURSO {anio: "2019", nota: "10" } ]->(DDA1);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (DDA1: Materia { id: "3"} ) CREATE (Ferreira)-[:CURSO {anio: "2019", nota: "9" } ]->(DDA1);
+MATCH (García: Persona { apellido: "García"}), (DDA1: Materia { id: "3"} ) CREATE (García)-[:CURSO {anio: "2020", nota: "10" } ]->(DDA1);
+
+// ADD
+MATCH (González: Persona { apellido: "González"}), (ADD: Materia { id: "4"} ) CREATE (González)-[:ENSEÑO]->(ADD);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (ADD: Materia { id: "4"} ) CREATE (Pereyra)-[:CURSO {anio: "2019", bimestre: "2", nota: "10" } ]->(ADD);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (ADD: Materia { id: "4"} ) CREATE (Díaz)-[:CURSO {anio: "2019", bimestre: "2", nota: "10" } ]->(ADD);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (ADD: Materia { id: "4"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", bimestre: "2", nota: "10" } ]->(ADD);
+MATCH (López: Persona { apellido: "López"}), (ADD: Materia { id: "4"} ) CREATE (López)-[:CURSO {anio: "2020", bimestre: "2", nota: "10" } ]->(ADD);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (ADD: Materia { id: "4"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", bimestre: "2", nota: "10" } ]->(ADD);
+MATCH (García: Persona { apellido: "García"}), (ADD: Materia { id: "4"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "2", nota: "10" } ]->(ADD);
+
+// DDA2
+MATCH (Mendez: Persona { apellido: "Mendez"}), (DDA2: Materia { id: "5"} ) CREATE (Mendez)-[:ENSEÑO]->(DDA2);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (DDA2: Materia { id: "5"} ) CREATE (Pereyra)-[:CURSO {anio: "2019", bimestre: "2", nota: "9" } ]->(DDA2);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (DDA2: Materia { id: "5"} ) CREATE (Díaz)-[:CURSO {anio: "2019", bimestre: "2", nota: "8" } ]->(DDA2);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (DDA2: Materia { id: "5"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", bimestre: "2", nota: "9" } ]->(DDA2);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (DDA2: Materia { id: "5"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", bimestre: "2", nota: "7" } ]->(DDA2);
+MATCH (García: Persona { apellido: "García"}), (DDA2: Materia { id: "5"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "2", nota: "7" } ]->(DDA2);
+
+// ADP
+MATCH (García: Persona { apellido: "García"}), (ADP: Materia { id: "6"} ) CREATE (García)-[:ENSEÑO]->(ADP);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (ADP: Materia { id: "6"} ) CREATE (Pereyra)-[:CURSO {anio: "2020", bimestre: "2", nota: "9" } ]->(ADP);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (ADP: Materia { id: "6"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", bimestre: "2", nota: "9" } ]->(ADP);
+MATCH (López: Persona { apellido: "López"}), (ADP: Materia { id: "6"} ) CREATE (López)-[:CURSO {anio: "2019", bimestre: "2", nota: "9" } ]->(ADP);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (ADP: Materia { id: "6"} ) CREATE (Ferreira)-[:CURSO {anio: "2019", bimestre: "2", nota: "9" } ]->(ADP);
+MATCH (García: Persona { apellido: "García"}), (ADP: Materia { id: "6"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "2", nota: "9" } ]->(ADP);
+
+// CIBS
+MATCH (García: Persona { apellido: "García"}), (CIBS: Materia { id: "7"} ) CREATE (García)-[:ENSEÑO]->(CIBS);
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (CIBS: Materia { id: "7"} ) CREATE (Pereyra)-[:CURSO {anio: "2020", bimestre: "3", nota: "9" } ]->(CIBS);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (CIBS: Materia { id: "7"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "3", nota: "9" } ]->(CIBS);
+MATCH (López: Persona { apellido: "López"}), (CIBS: Materia { id: "7"} ) CREATE (López)-[:CURSO {anio: "2020", bimestre: "3", nota: "8" } ]->(CIBS);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (CIBS: Materia { id: "7"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", bimestre: "3", nota: "9" } ]->(CIBS);
+MATCH (García: Persona { apellido: "García"}), (CIBS: Materia { id: "7"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "3", nota: "9" } ]->(CIBS);
+
+// GVD
+MATCH (Lupis: Persona { apellido: "Lupis"}), (GVD: Materia { id: "8"} ) CREATE (Lupis)-[:ENSEÑO]->(GVD);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (GVD: Materia { id: "8"} ) CREATE (Dominguez)-[:CURSO {anio: "2019", bimestre: "3", nota: "10" } ]->(GVD);
+MATCH (López: Persona { apellido: "López"}), (GVD: Materia { id: "8"} ) CREATE (López)-[:CURSO {anio: "2019", bimestre: "3", nota: "10" } ]->(GVD);
+MATCH (Ferreira: Persona { apellido: "Ferreira"}), (GVD: Materia { id: "8"} ) CREATE (Ferreira)-[:CURSO {anio: "2020", bimestre: "3", nota: "9" } ]->(GVD);
+MATCH (García: Persona { apellido: "García"}), (GVD: Materia { id: "8"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "3", nota: "10" } ]->(GVD);
+
+// DDA3
+MATCH (Pereyra: Persona { apellido: "Pereyra"}), (DDA3: Materia { id: "9"} ) CREATE (Pereyra)-[:ENSEÑO]->(DDA3);
+MATCH (López: Persona { apellido: "López"}), (DDA3: Materia { id: "9"} ) CREATE (López)-[:CURSO {anio: "2020", bimestre: "3", nota: "10" } ]->(DDA3);
+MATCH (García: Persona { apellido: "García"}), (DDA3: Materia { id: "9"} ) CREATE (García)-[:CURSO {anio: "2020", bimestre: "3", nota: "8" } ]->(DDA3);
+
+// APA
+MATCH (Ciuccio: Persona { apellido: "Ciuccio"}), (APA: Materia { id: "10"} ) CREATE (Ciuccio)-[:ENSEÑO]->(APA);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (APA: Materia { id: "10"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "4", nota: "6" } ]->(APA);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (APA: Materia { id: "10"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "4", nota: "8" } ]->(APA);
+MATCH (Menem: Persona { apellido: "Menem"}), (APA: Materia { id: "10"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "4", nota: "9" } ]->(APA);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (APA: Materia { id: "10"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "4", nota: "7" } ]->(APA);
+
+// TSIOT
+MATCH (Hernandez: Persona { apellido: "Hernandez"}), (TSIOT: Materia { id: "11"} ) CREATE (Hernandez)-[:ENSEÑO]->(TSIOT);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (TSIOT: Materia { id: "11"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "4", nota: "6" } ]->(TSIOT);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (TSIOT: Materia { id: "11"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "4", nota: "8" } ]->(TSIOT);
+MATCH (Menem: Persona { apellido: "Menem"}), (TSIOT: Materia { id: "11"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "4", nota: "9" } ]->(TSIOT);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (TSIOT: Materia { id: "11"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "4", nota: "7" } ]->(TSIOT);
+
+// IIS
+MATCH (Carlin: Persona { apellido: "Carlin"}), (IIS: Materia { id: "12"} ) CREATE (Carlin)-[:ENSEÑO]->(IIS);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (IIS: Materia { id: "12"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "4", nota: "6" } ]->(IIS);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (IIS: Materia { id: "12"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "4", nota: "8" } ]->(IIS);
+MATCH (Menem: Persona { apellido: "Menem"}), (IIS: Materia { id: "12"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "4", nota: "9" } ]->(IIS);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (IIS: Materia { id: "12"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "4", nota: "7" } ]->(IIS);
+
+// Elec3
+MATCH (Carlin: Persona { apellido: "Carlin"}), (Elec3: Materia { id: "13"} ) CREATE (Carlin)-[:ENSEÑO]->(Elec3);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (Elec3: Materia { id: "13"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "5", nota: "6" } ]->(Elec3);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (Elec3: Materia { id: "13"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "5", nota: "8" } ]->(Elec3);
+MATCH (Menem: Persona { apellido: "Menem"}), (Elec3: Materia { id: "13"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "5", nota: "9" } ]->(Elec3);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (Elec3: Materia { id: "13"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "5", nota: "7" } ]->(Elec3);
+
+// Elec4
+MATCH (Díaz: Persona { apellido: "Díaz"}), (Elec4: Materia { id: "14"} ) CREATE (Díaz)-[:ENSEÑO]->(Elec4);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (Elec4: Materia { id: "14"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "5", nota: "6" } ]->(Elec4);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (Elec4: Materia { id: "14"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "5", nota: "8" } ]->(Elec4);
+MATCH (Menem: Persona { apellido: "Menem"}), (Elec4: Materia { id: "14"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "5", nota: "9" } ]->(Elec4);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (Elec4: Materia { id: "14"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "5", nota: "7" } ]->(Elec4);
+
+// TI
+MATCH (Hernandez: Persona { apellido: "Hernandez"}), (TI: Materia { id: "15"} ) CREATE (Hernandez)-[:ENSEÑO]->(TI);
+MATCH (Díaz: Persona { apellido: "Díaz"}), (TI: Materia { id: "15"} ) CREATE (Díaz)-[:CURSO {anio: "2020", bimestre: "5", nota: "6" } ]->(TI);
+MATCH (Dominguez: Persona { apellido: "Dominguez"}), (TI: Materia { id: "15"} ) CREATE (Dominguez)-[:CURSO {anio: "2020", bimestre: "5", nota: "8" } ]->(TI);
+MATCH (Menem: Persona { apellido: "Menem"}), (TI: Materia { id: "15"} ) CREATE (Menem)-[:CURSO {anio: "2020", bimestre: "5", nota: "9" } ]->(TI);
+MATCH (Carlin: Persona { apellido: "Carlin"}), (TI: Materia { id: "15"} ) CREATE (Carlin)-[:CURSO {anio: "2020", bimestre: "5", nota: "7" } ]->(TI);
+
+
+Notas:
+
+// Eliminar una relación en particular
+MATCH ( Persona { apellido: "Pereyra"})-[r:CONOCE_A]->(Persona { apellido: "Pereyra"} )
+DELETE r
+
