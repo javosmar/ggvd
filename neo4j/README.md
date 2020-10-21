@@ -110,8 +110,8 @@ RETURN DISTINCT m.nombre
 ```
 ![](./photos/8.png)
 ![](./photos/8g.png)
-9. Consulta adicional, decidida por el alumno.
-Consulto los alumnos que están cursando al menos una materia optativa
+9. Consulta adicional, decidida por el alumno:
+**Consulto los alumnos que están cursando al menos una materia optativa**
 ```sh
 MATCH (a:Persona)-[:CURSO]->(m:Materia{modalidad:"Optativa"})
 RETURN a
