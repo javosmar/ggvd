@@ -116,5 +116,5 @@ RETURN DISTINCT m.nombre
 MATCH (a:Persona)-[:CURSO]->(m:Materia{modalidad:"Optativa"})
 RETURN a
 ```
-![](./photos/9.png)
+![](./photos/9a.png)
 ![](./photos/9g.png)
