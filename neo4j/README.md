@@ -32,8 +32,8 @@ consulta).
 
 ### Resolución
 
-Para la resolución del ejercicio diseñé un esquema de nodos **persona** con sus atributos *nombre* y *apellido*, y nodos **materia** con atributos *nombre*, *modalidad* y *bimestre*.
-Las relaciones posibles entre los nodos serán **cursó** con atributos *anio* y *nota*, la relación **enseñó** y la relación **conoce**. Las primeras dos relaciones se darán entre un nodo *persona* y un nodo *materia*, mientras que la última relación existirá entre nodos *persona*.
+Para la resolución del ejercicio diseñé un esquema de nodos **persona** con sus atributos *nombre* y *apellido*, y nodos **materia** con atributos *nombre*, *modalidad* y *bimestre*, ya que son propiedades inherentes a las asignaturas.
+Las relaciones posibles entre los nodos serán **cursó** con atributos *anio* y *nota*, la relación **enseñó** y la relación **conoce_a**. Las primeras dos relaciones se darán entre un nodo *persona* y un nodo *materia*, mientras que la última relación existirá entre nodos *persona*. Las propiedades de la primer relación responden a que son variables que dependen de la relación misma y no de los nodos que representan a alumnos o asignaturas.
 ![](https://i.ibb.co/QN0rJd0/Diagrama-tp-neo4j-1.png)
 
 ![](./photos/schema.png)
